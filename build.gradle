@@ -23,6 +23,24 @@ allprojects {
     }
 }
 
+ext {
+    recyclerViewVersion = '1.1.0-beta05'
+    koinVersion = '2.0.1'
+    picassoVersion = '2.71828'
+    retrofitVersion = '2.6.1'
+    okHttpVersion = '4.1.0'
+    moshiVersion = '1.8.0'
+    rxAndroidVersion = '2.1.1'
+    rxJavaVersion = '2.2.11'
+    rxKotlinVersion = '2.1.0'
+    aacVersion = '2.1.0'
+    roomVersion = "2.2.0"
+    mockitoCoreVersion = "2.24.0"
+    powerMockVersion = "1.7.3"
+    androidArchCoreTestVersion = "1.1.1"
+    koinTestVersion = "2.0.1"
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
