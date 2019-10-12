@@ -1,8 +1,9 @@
 package com.rrzaniolo.restaurantchallenge.data.repositories
 
-import com.rrzaniolo.restaurantchallenge.data.models.RestaurantResponse
+import com.rrzaniolo.restaurantchallenge.data.models.RestaurantListResponse
 import com.rrzaniolo.restaurantchallenge.di.configurations.Database
-import com.rrzaniolo.restaurantchallenge.domain.RestaurantRepository
+import com.rrzaniolo.restaurantchallenge.domain.entities.RestaurantEntity
+import com.rrzaniolo.restaurantchallenge.domain.repositories.RestaurantRepository
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -13,20 +14,21 @@ import io.reactivex.schedulers.Schedulers
  * Created by Rodrigo Rodrigues Zaniolo on 10/12/2019.
  * All rights reserved.
  */
-class RestaurantRepositoryImp( private val dataBase: Database): RestaurantRepository{
-    override fun getRestaurants(): Flowable<RestaurantResponse> {
+class RestaurantRepositoryImp( private val dataBase: Database):
+    RestaurantRepository {
+    override fun getRestaurants(): Flowable<RestaurantListResponse> {
         TODO("not implemented") //Add restaurant json file to project and read data from it (since we do not have an api yet)
     }
 
-    override fun saveRestaurant(restaurantResponse: RestaurantResponse): Completable {
+    override fun saveRestaurant(entity: RestaurantEntity): Completable {
         return dataBase
             .restaurantDao()
-            .saveRestaurant(restaurantResponse)
+            .saveRestaurant(entity)
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
     }
 
-    override fun getRestaurantById(name: String?): Single<RestaurantResponse> {
+    override fun getRestaurantByName(name: String?): Single<RestaurantEntity> {
         return dataBase
             .restaurantDao()
             .getRestaurantByName(name)
@@ -34,15 +36,15 @@ class RestaurantRepositoryImp( private val dataBase: Database): RestaurantReposi
             .subscribeOn(Schedulers.io())
     }
 
-    override fun deleteRestaurant(restaurantResponse: RestaurantResponse): Completable {
+    override fun deleteRestaurant(entity: RestaurantEntity): Completable {
         return dataBase
             .restaurantDao()
-            .deleteRestaurant(restaurantResponse)
+            .deleteRestaurant(entity)
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
     }
 
-    override fun getRestaurantsLocally(): Flowable<List<RestaurantResponse>> {
+    override fun getRestaurantsLocally(): Flowable<ArrayList<RestaurantEntity>> {
         return dataBase
             .restaurantDao()
             .getRestaurants()

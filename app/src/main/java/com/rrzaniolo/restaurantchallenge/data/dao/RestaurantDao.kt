@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.rrzaniolo.restaurantchallenge.data.models.RestaurantResponse
+import com.rrzaniolo.restaurantchallenge.domain.entities.RestaurantEntity
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -19,30 +19,30 @@ interface RestaurantDao {
     /**
      * Save a restaurant locally.
      *
-     * @param restaurantResponse the restaurant to be saved.
+     * @param entity the restaurant to be saved.
      * **/
-    @Insert fun saveRestaurant(restaurantResponse: RestaurantResponse): Completable
+    @Insert fun saveRestaurant(entity: RestaurantEntity): Completable
 
     /**
      * Get a restaurant that was locally saved by it's id.
      *
      * @param name the restaurant name.
-     * @return a RestaurantResponse
+     * @return a RestaurantEntity
      * **/
-    @Query("SELECT * FROM restaurantResponse WHERE name = :name") fun getRestaurantByName(name: String?): Single<RestaurantResponse>
+    @Query("SELECT * FROM restaurantentity WHERE name = :name") fun getRestaurantByName(name: String?): Single<RestaurantEntity>
 
     /**
      * Delete a restaurant tha has been locally saved
      *
-     * @param restaurantResponse the restaurant to be deleted.
+     * @param entity the restaurant to be deleted.
      * **/
-    @Delete fun deleteRestaurant(restaurantResponse: RestaurantResponse): Completable
+    @Delete fun deleteRestaurant(entity: RestaurantEntity): Completable
 
     /**
      * Gets a list of all the locally saved restaurants
      *
      * @return a list of RestaurantResponse.
      * **/
-    @Query("SELECT * FROM restaurantResponse") fun getRestaurants(): Flowable<List<RestaurantResponse>>
+    @Query("SELECT * FROM restaurantentity") fun getRestaurants(): Flowable<ArrayList<RestaurantEntity>>
 
 }

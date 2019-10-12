@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">RestaurantChallenge</string>
+    <!-- General -->
+    <string name="errorTitle">Error</string>
+    <string name="errorMessage">Ops! There was a problems with you request</string>
+    <string name="tryAgain">Try again</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

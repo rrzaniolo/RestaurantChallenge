@@ -1,6 +1,5 @@
 package com.rrzaniolo.restaurantchallenge.data.models
 
-import androidx.room.Entity
 import com.squareup.moshi.Json
 
 /**
@@ -11,7 +10,6 @@ data class RestaurantListResponse(
    @field:Json(name = "restaurants") val restaurantList: ArrayList<RestaurantResponse>
 )
 
-@Entity
 data class RestaurantResponse(
    @field:Json(name = "name") val name: String,
    @field:Json(name = "status") val status: String,
@@ -19,7 +17,6 @@ data class RestaurantResponse(
 
 )
 
-@Entity
 data class RestaurantSortingValuesResponse(
    @field:Json(name = "bestMatch") val bestMatch: Float,
    @field:Json(name = "newest") val newest: Float,
