@@ -42,5 +42,5 @@ interface RestaurantRepository {
      * Get a list with all the restaurants that have been locally saved.
      *
      * @return a list of RestaurantEntity**/
-    fun getRestaurantsLocally(): Flowable<ArrayList<RestaurantEntity>>
+    fun getRestaurantsLocally(): Flowable<List<RestaurantEntity>>
 }

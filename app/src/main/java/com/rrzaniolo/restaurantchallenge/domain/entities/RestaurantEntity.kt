@@ -1,6 +1,7 @@
 package com.rrzaniolo.restaurantchallenge.domain.entities
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.rrzaniolo.movieapichallenge.presentation.base.BaseRecyclerAdapter
 
 /**
@@ -9,7 +10,7 @@ import com.rrzaniolo.movieapichallenge.presentation.base.BaseRecyclerAdapter
  */
 @Entity
 data class RestaurantEntity(
-    val name: String,
+    @PrimaryKey val name: String,
     val status: String,
     var isFavorite: Boolean,
     val bestMatch: Float,

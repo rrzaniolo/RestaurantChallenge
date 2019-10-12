@@ -43,6 +43,6 @@ interface RestaurantDao {
      *
      * @return a list of RestaurantResponse.
      * **/
-    @Query("SELECT * FROM restaurantentity") fun getRestaurants(): Flowable<ArrayList<RestaurantEntity>>
+    @Query("SELECT * FROM restaurantentity") fun getRestaurants(): Flowable<List<RestaurantEntity>>
 
 }

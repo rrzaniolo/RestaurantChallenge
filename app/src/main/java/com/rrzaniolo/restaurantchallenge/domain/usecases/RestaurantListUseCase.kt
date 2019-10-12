@@ -19,5 +19,5 @@ class RestaurantListUseCase(private val repository: RestaurantRepository) {
     fun deleteRestaurant(entity: RestaurantEntity): Completable = repository.deleteRestaurant(entity)
     fun getRestaurantByName(name: String): Single<RestaurantEntity> = repository.getRestaurantByName(name)
 
-    fun getFavoriteRestaurants(): Flowable<ArrayList<RestaurantEntity>> = repository.getRestaurantsLocally()
+    fun getFavoriteRestaurants(): Flowable<List<RestaurantEntity>> = repository.getRestaurantsLocally()
 }

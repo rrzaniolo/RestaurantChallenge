@@ -44,7 +44,7 @@ class RestaurantRepositoryImp( private val dataBase: Database):
             .subscribeOn(Schedulers.io())
     }
 
-    override fun getRestaurantsLocally(): Flowable<ArrayList<RestaurantEntity>> {
+    override fun getRestaurantsLocally(): Flowable<List<RestaurantEntity>> {
         return dataBase
             .restaurantDao()
             .getRestaurants()
