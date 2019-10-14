@@ -106,13 +106,14 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
 
     private fun sortList(sort: RestaurantSortingOptions?){
         val comparator = when(sort) {
-            RestaurantSortingOptions.NEWEST -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::newest)
-            RestaurantSortingOptions.RATING_AVARAGE -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::ratingAverage)
-            RestaurantSortingOptions.DISTANCE -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::distance)
-            RestaurantSortingOptions.POPULARITY -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::popularity)
             RestaurantSortingOptions.AVARAGE_PRODUCT_PRICE -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::averageProductPrice)
+            RestaurantSortingOptions.BEST_MATCH -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::bestMatch)
             RestaurantSortingOptions.DELIVERY_COST -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::deliveryCosts)
+            RestaurantSortingOptions.DISTANCE -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::distance)
             RestaurantSortingOptions.MIN_COST -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::minCost)
+            RestaurantSortingOptions.NEWEST -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::newest)
+            RestaurantSortingOptions.POPULARITY -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::popularity)
+            RestaurantSortingOptions.RATING_AVARAGE -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::ratingAverage)
             else -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status)
         }
         currentRestaurantList.sortWith(comparator)

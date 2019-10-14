@@ -7,7 +7,7 @@ import com.squareup.moshi.Json
  * All rights reserved.
  */
 data class RestaurantListResponse(
-   @field:Json(name = "restaurants") val restaurantList: ArrayList<RestaurantResponse>
+   @field:Json(name = "restaurants") val restaurantList: List<RestaurantResponse>
 )
 
 data class RestaurantResponse(

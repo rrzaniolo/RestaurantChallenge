@@ -2,6 +2,7 @@ package com.rrzaniolo.movieapichallenge.presentation.base
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LifecycleOwner
@@ -59,5 +60,17 @@ abstract class BaseView: AppCompatActivity(), LifecycleOwner {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    protected fun showShortToast(message: String){
+        showToast(message, Toast.LENGTH_SHORT)
+    }
+
+    protected fun showLongToast(message: String){
+        showToast(message, Toast.LENGTH_LONG)
+    }
+
+    private fun showToast(message: String, length: Int){
+        Toast.makeText(this, message, length).show()
     }
 }

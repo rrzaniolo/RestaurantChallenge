@@ -26,7 +26,7 @@ abstract class BaseRecyclerAdapter<T : BaseRecyclerAdapter.BaseRecyclerItem>:
         }
     }
 
-    fun setList(list: ArrayList<T>) {
+    open fun setList(list: ArrayList<T>) {
         dataList = list
         notifyDataSetChanged()
     }
