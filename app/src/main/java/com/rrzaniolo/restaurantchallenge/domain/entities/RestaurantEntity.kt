@@ -12,7 +12,7 @@ import com.rrzaniolo.movieapichallenge.presentation.base.BaseRecyclerAdapter
 data class RestaurantEntity(
     @PrimaryKey val name: String,
     val status: Int,
-    var isFavorite: Boolean,
+    var isFavorite: Boolean = false,
     val bestMatch: Float,
     val newest: Float,
     val ratingAverage: Float,
@@ -21,7 +21,22 @@ data class RestaurantEntity(
     val averageProductPrice: Int,
     val deliveryCosts: Int,
     val minCost: Int
-): BaseRecyclerAdapter.BaseRecyclerItem()
+): BaseRecyclerAdapter.BaseRecyclerItem(){
+
+    override fun equals(other: Any?): Boolean {
+        return other?.let {
+            if(other is RestaurantEntity){
+                other.name == this.name
+            }else false
+        }?:run { false }
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+
+
+}
 
 enum class RestaurantStatus(val statusCode: Int, val statusName: String){
     OPEN(0, "open"),
@@ -35,7 +50,7 @@ enum class RestaurantStatus(val statusCode: Int, val statusName: String){
 }
 
 enum class RestaurantSortingOptions{
-    NEWEST, BEST_MATCH, RATING_AVARAGE,
-    DISTANCE, POPULARITY, AVARAGE_PRODUCT_PRICE,
+    NEWEST, BEST_MATCH, DEFAULT, RATING_AVERAGE,
+    DISTANCE, POPULARITY, AVERAGE_PRODUCT_PRICE,
     DELIVERY_COST, MIN_COST
 }

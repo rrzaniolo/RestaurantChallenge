@@ -11,7 +11,7 @@ abstract class BaseRecyclerAdapter<T : BaseRecyclerAdapter.BaseRecyclerItem>:
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var listener: OnItemClickListener? = null
-    var dataList: ArrayList<T> = ArrayList()
+    var dataList: MutableList<T> = mutableListOf()
 
     fun getList(): List<T>? {
         return dataList
@@ -26,19 +26,21 @@ abstract class BaseRecyclerAdapter<T : BaseRecyclerAdapter.BaseRecyclerItem>:
         }
     }
 
-    open fun setList(list: ArrayList<T>) {
+    open fun setList(list: MutableList<T>) {
         dataList = list
         notifyDataSetChanged()
     }
 
-    fun addItems(items: ArrayList<T>) {
+    fun addItems(items: MutableList<T>) {
         val lastPos = dataList.size - 1
         dataList.addAll(items)
         notifyItemRangeInserted(lastPos, items.size)
     }
 
-    fun getItem(position: Int): T {
-        return getList()!![position]
+    fun getItem(position: Int): T? {
+        return getList()?.let{
+            it[position]
+        }
     }
 
     interface OnItemClickListener {

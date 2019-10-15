@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RestaurantChallenge</string>
+    <string name="app_name">Restaurant Challenge</string>
     <!-- General -->
     <string name="errorTitle">Error</string>
     <string name="errorMessage">Ops! There was a problems with you request</string>
@@ -7,6 +7,20 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="search_menu">Search</string>
+    <string name="sort_menu">Sort</string>
+    <string name="sort_option_title">Choose a sorting Option</string>
+    <string-array name="sorting_options">
+        <item name="sort_option_average_none">None</item>
+        <item name="sort_option_average_product_price">Average product price</item>
+        <item name="sort_option_best_match">Best match</item>
+        <item name="sort_option_delivery_cost">Delivery cost</item>
+        <item name="sort_option_distance">Distance</item>
+        <item name="sort_option_min_cost">Cheaper</item>
+        <item name="sort_option_newest">Newest</item>
+        <item name="sort_option_popularity">Popularity</item>
+        <item name="sort_option_rating">Rating average</item>
+    </string-array>
+
 
     <!-- Restaurant -->
     <string name="restaurant_save_success">The restaurant has been added to favorites.</string>

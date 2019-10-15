@@ -4,13 +4,13 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.EmptyResultSetException
-import com.rrzaniolo.movieapichallenge.presentation.base.BaseViewModel
 import com.rrzaniolo.restaurantchallenge.data.models.RestaurantListResponse
 import com.rrzaniolo.restaurantchallenge.data.models.RestaurantResponse
 import com.rrzaniolo.restaurantchallenge.domain.entities.RestaurantEntity
 import com.rrzaniolo.restaurantchallenge.domain.entities.RestaurantSortingOptions
 import com.rrzaniolo.restaurantchallenge.domain.entities.RestaurantStatus
 import com.rrzaniolo.restaurantchallenge.domain.usecases.RestaurantListUseCase
+import com.rrzaniolo.restaurantchallenge.presentation.base.BaseViewModel
 
 /**
  * Created by Rodrigo Rodrigues Zaniolo on 10/12/2019.
@@ -27,6 +27,8 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
 
     fun getRestaurants() {
         _state.value = RestaurantListViewState.ShowLoading
+        currentRestaurantList.clear()
+        disposableTask.clear()
         disposableTask.add(
             useCase.getFavoriteRestaurants().subscribe(
                 {
@@ -40,13 +42,18 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
         )
     }
     private fun getRestaurantsFromServer(){
+        disposableTask.clear()
         disposableTask.add(
             useCase.getRestaurants().subscribe(
                 {
-                    currentRestaurantList.addAll(parseListResponse(it))
+                    parseListResponse(it).forEach {entity ->
+                        if(!currentRestaurantList.contains(entity)) currentRestaurantList.add(entity)
+                    }
+                    sortList()
                     _state.postValue(RestaurantListViewState.showList(currentRestaurantList))
                 },
                 {
+                    sortList()
                     if(currentRestaurantList.isEmpty()) _state.value = RestaurantListViewState.ShowError
                     else _state.postValue(RestaurantListViewState.showList(currentRestaurantList))
                 }
@@ -72,6 +79,7 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
 
     fun saveOrRemoveRestaurant(entity: RestaurantEntity){
         _state.value = RestaurantListViewState.ShowLoading
+        disposableTask.clear()
         disposableTask.add(
             useCase.getRestaurantByName(entity.name).subscribe(
                 {
@@ -86,6 +94,7 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
     }
     private fun saveRestaurant(entity: RestaurantEntity) {
         entity.isFavorite = true
+        disposableTask.clear()
         disposableTask.add(useCase.saveRestaurant(entity).subscribe({
             _state.postValue(RestaurantListViewState.SaveSuccess)
         }, {
@@ -96,7 +105,8 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
 
     private fun deleteRestaurant(entity: RestaurantEntity) {
         entity.isFavorite = false
-        disposableTask.addAll(useCase.deleteRestaurant(entity).subscribe({
+        disposableTask.clear()
+        disposableTask.add(useCase.deleteRestaurant(entity).subscribe({
             _state.postValue(RestaurantListViewState.DeleteSuccess)
         }, {
             entity.isFavorite = true
@@ -104,17 +114,17 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
         }))
     }
 
-    private fun sortList(sort: RestaurantSortingOptions?){
+    private fun sortList(sort: RestaurantSortingOptions? = null){
         val comparator = when(sort) {
-            RestaurantSortingOptions.AVARAGE_PRODUCT_PRICE -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::averageProductPrice)
-            RestaurantSortingOptions.BEST_MATCH -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::bestMatch)
-            RestaurantSortingOptions.DELIVERY_COST -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::deliveryCosts)
-            RestaurantSortingOptions.DISTANCE -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::distance)
-            RestaurantSortingOptions.MIN_COST -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::minCost)
-            RestaurantSortingOptions.NEWEST -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::newest)
-            RestaurantSortingOptions.POPULARITY -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::popularity)
-            RestaurantSortingOptions.RATING_AVARAGE -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status, RestaurantEntity::ratingAverage)
-            else -> compareBy(RestaurantEntity::isFavorite, RestaurantEntity::status)
+            RestaurantSortingOptions.AVERAGE_PRODUCT_PRICE -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::averageProductPrice)
+            RestaurantSortingOptions.BEST_MATCH -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::bestMatch)
+            RestaurantSortingOptions.DELIVERY_COST -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::deliveryCosts)
+            RestaurantSortingOptions.DISTANCE -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::distance)
+            RestaurantSortingOptions.MIN_COST -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::minCost)
+            RestaurantSortingOptions.NEWEST -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::newest)
+            RestaurantSortingOptions.POPULARITY -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::popularity)
+            RestaurantSortingOptions.RATING_AVERAGE -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::ratingAverage)
+            else -> compareBy({!it.isFavorite}, RestaurantEntity::status)
         }
         currentRestaurantList.sortWith(comparator)
     }
