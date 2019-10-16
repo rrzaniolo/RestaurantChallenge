@@ -156,7 +156,7 @@ class RestaurantListView: BaseView(), BaseRecyclerAdapter.OnItemClickListener{
     override fun onItemClick(view: View, position: Int) {
         lastClickedItem = position
         restaurantListAdapter.getItem(position)?.let {
-            viewModel.saveOrRemoveRestaurant(it)
+            viewModel.saveOrRemoveRestaurant(it.copy())
         }
     }
 }

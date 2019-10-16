@@ -67,14 +67,14 @@ class RestaurantListAdapter: BaseRecyclerAdapter<RestaurantEntity>(), Filterable
     }
 
     fun setFavorite(position: Int){
-        getItem(position)?.apply {
-            Log.d("WTF", "dataList: " + this.isFavorite + " -> dataListComplete: " + dataListComplete[position].isFavorite)
-            this.isFavorite = !this.isFavorite
-            Log.d("WTF", "dataList: " + this.isFavorite + " -> dataListComplete: " + dataListComplete[position].isFavorite)
+        getItem(position)?.let {dataEntity ->
+            Log.d("WTF", "dataList: " + dataEntity.isFavorite + " -> dataListComplete: " + dataListComplete[position].isFavorite)
+            dataEntity.isFavorite = !dataEntity.isFavorite
+            Log.d("WTF", "dataList: " + dataEntity.isFavorite + " -> dataListComplete: " + dataListComplete[position].isFavorite)
             dataListComplete
-                .first { it.name == this.name }
+                .first { it.name == dataEntity.name }
                 .apply { this.isFavorite = !this.isFavorite }
-            Log.d("WTF", "dataList: " + this.isFavorite + " -> dataListComplete: " + dataListComplete[position].isFavorite)
+            Log.d("WTF", "dataList: " + dataEntity.isFavorite + " -> dataListComplete: " + dataListComplete[position].isFavorite)
             notifyItemChanged(position)
         }
         Log.d("WTF", "Between")

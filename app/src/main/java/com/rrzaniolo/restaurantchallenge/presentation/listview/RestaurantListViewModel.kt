@@ -95,7 +95,6 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
         disposableTask.add(useCase.saveRestaurant(entity).subscribe({
             _state.postValue(RestaurantListViewState.SaveSuccess)
         }, {
-            entity.isFavorite = false
             _state.postValue(RestaurantListViewState.SaveError)
         }))
     }
@@ -106,7 +105,6 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
         disposableTask.add(useCase.deleteRestaurant(entity).subscribe({
             _state.postValue(RestaurantListViewState.DeleteSuccess)
         }, {
-            entity.isFavorite = true
             _state.postValue(RestaurantListViewState.DeleteError)
         }))
     }
