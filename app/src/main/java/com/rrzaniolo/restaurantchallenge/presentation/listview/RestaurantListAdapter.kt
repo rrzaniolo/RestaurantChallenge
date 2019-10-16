@@ -55,13 +55,15 @@ class RestaurantListAdapter: BaseRecyclerAdapter<RestaurantEntity>(), Filterable
 
     }
 
+    private var sortingOption = RestaurantSortingOptions.DEFAULT
+
     @Suppress("UNCHECKED_CAST")
     override fun setList(list: MutableList<RestaurantEntity>) {
         list.forEach {
             dataList.add(it.copy())
             dataListComplete.add(it.copy())
         }
-        sortList(RestaurantSortingOptions.DEFAULT)
+        sortList(sortingOption)
     }
 
     fun setFavorite(position: Int){
@@ -87,21 +89,22 @@ class RestaurantListAdapter: BaseRecyclerAdapter<RestaurantEntity>(), Filterable
 
     override fun getItemCount(): Int = dataList.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = (holder as ViewHolder).bind(dataList[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = (holder as ViewHolder).bind(dataList[position], sortingOption)
 
     override fun getFilter(): Filter {
         return restaurantFilter
     }
 
-    fun sortList(sortOption: RestaurantSortingOptions? = null){
-        val comparator = when(sortOption) {
+    fun sortList(sortOption: RestaurantSortingOptions){
+        sortingOption = sortOption
+        val comparator = when(sortingOption) {
             RestaurantSortingOptions.AVERAGE_PRODUCT_PRICE -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::averageProductPrice)
             RestaurantSortingOptions.BEST_MATCH -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::bestMatch)
             RestaurantSortingOptions.DELIVERY_COST -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::deliveryCosts)
             RestaurantSortingOptions.DISTANCE -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::distance)
             RestaurantSortingOptions.MIN_COST -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::minCost)
             RestaurantSortingOptions.NEWEST -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::newest)
-            RestaurantSortingOptions.POPULARITY -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::popularity)
+            RestaurantSortingOptions.POPULARITY -> compareBy({!it.isFavorite}, RestaurantEntity::status, {it.popularity})
             RestaurantSortingOptions.RATING_AVERAGE -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::ratingAverage)
             else -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::name)
         }
@@ -115,15 +118,27 @@ class RestaurantListAdapter: BaseRecyclerAdapter<RestaurantEntity>(), Filterable
         private val onClickListener: OnItemClickListener?
     ) : RecyclerView.ViewHolder(view) {
 
-        fun bind(restaurant: RestaurantEntity) = with(view) {
+        fun bind(restaurant: RestaurantEntity, sortOption: RestaurantSortingOptions) = with(view) {
+            val context = view.context
             restaurantName.text = restaurant.name
             restaurantStatus.text = RestaurantStatus.statusNameFromStatusCode(restaurant.status)
             restaurantFavorite.setColorFilter(
-                ContextCompat.getColor(view.context, if(restaurant.isFavorite) R.color.floralWhite else R.color.colorPrimary),
+                ContextCompat.getColor(context, if(restaurant.isFavorite) R.color.floralWhite else R.color.colorPrimary),
                 PorterDuff.Mode.SRC_IN
             )
 
-            //TODO - Figure out a way to display the sorted property.
+            val sortingOptions = context.resources.getStringArray(R.array.sorting_options)
+            when(sortOption) {
+                RestaurantSortingOptions.AVERAGE_PRODUCT_PRICE -> restaurantSort.text = context.getString(R.string.sortingDisplay, sortingOptions[1], restaurant.averageProductPrice.toString())
+                RestaurantSortingOptions.BEST_MATCH -> restaurantSort.text = context.getString(R.string.sortingDisplay, sortingOptions[2], restaurant.bestMatch.toString())
+                RestaurantSortingOptions.DELIVERY_COST -> restaurantSort.text = context.getString(R.string.sortingDisplay, sortingOptions[3], restaurant.deliveryCosts.toString())
+                RestaurantSortingOptions.DISTANCE -> restaurantSort.text = context.getString(R.string.sortingDisplay, sortingOptions[4], restaurant.distance.toString())
+                RestaurantSortingOptions.MIN_COST -> restaurantSort.text = context.getString(R.string.sortingDisplay, sortingOptions[5], restaurant.minCost.toString())
+                RestaurantSortingOptions.NEWEST -> restaurantSort.text = context.getString(R.string.sortingDisplay, sortingOptions[6], restaurant.newest.toString())
+                RestaurantSortingOptions.POPULARITY -> restaurantSort.text = context.getString(R.string.sortingDisplay, sortingOptions[7], restaurant.popularity.toString())
+                RestaurantSortingOptions.RATING_AVERAGE -> restaurantSort.text = context.getString(R.string.sortingDisplay, sortingOptions[8], restaurant.ratingAverage.toString())
+                else -> restaurantSort.text = ""
+            }
 
             restaurantFavorite.setOnClickListener { onClickListener?.onItemClick(view, adapterPosition) }
         }

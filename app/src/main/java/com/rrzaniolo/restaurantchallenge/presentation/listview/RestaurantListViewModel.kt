@@ -7,7 +7,6 @@ import androidx.room.EmptyResultSetException
 import com.rrzaniolo.restaurantchallenge.data.models.RestaurantListResponse
 import com.rrzaniolo.restaurantchallenge.data.models.RestaurantResponse
 import com.rrzaniolo.restaurantchallenge.domain.entities.RestaurantEntity
-import com.rrzaniolo.restaurantchallenge.domain.entities.RestaurantSortingOptions
 import com.rrzaniolo.restaurantchallenge.domain.entities.RestaurantStatus
 import com.rrzaniolo.restaurantchallenge.domain.usecases.RestaurantListUseCase
 import com.rrzaniolo.restaurantchallenge.presentation.base.BaseViewModel
@@ -49,11 +48,9 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
                     parseListResponse(it).forEach {entity ->
                         if(!currentRestaurantList.contains(entity)) currentRestaurantList.add(entity)
                     }
-                    sortList()
                     _state.postValue(RestaurantListViewState.showList(currentRestaurantList))
                 },
                 {
-                    sortList()
                     if(currentRestaurantList.isEmpty()) _state.value = RestaurantListViewState.ShowError
                     else _state.postValue(RestaurantListViewState.showList(currentRestaurantList))
                 }
@@ -112,20 +109,5 @@ class RestaurantListViewModel(private val useCase: RestaurantListUseCase): BaseV
             entity.isFavorite = true
             _state.postValue(RestaurantListViewState.DeleteError)
         }))
-    }
-
-    private fun sortList(sort: RestaurantSortingOptions? = null){
-        val comparator = when(sort) {
-            RestaurantSortingOptions.AVERAGE_PRODUCT_PRICE -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::averageProductPrice)
-            RestaurantSortingOptions.BEST_MATCH -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::bestMatch)
-            RestaurantSortingOptions.DELIVERY_COST -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::deliveryCosts)
-            RestaurantSortingOptions.DISTANCE -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::distance)
-            RestaurantSortingOptions.MIN_COST -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::minCost)
-            RestaurantSortingOptions.NEWEST -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::newest)
-            RestaurantSortingOptions.POPULARITY -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::popularity)
-            RestaurantSortingOptions.RATING_AVERAGE -> compareBy({!it.isFavorite}, RestaurantEntity::status, RestaurantEntity::ratingAverage)
-            else -> compareBy({!it.isFavorite}, RestaurantEntity::status)
-        }
-        currentRestaurantList.sortWith(comparator)
     }
 }

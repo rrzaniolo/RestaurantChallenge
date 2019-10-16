@@ -9,6 +9,7 @@
     <string name="search_menu">Search</string>
     <string name="sort_menu">Sort</string>
     <string name="sort_option_title">Choose a sorting Option</string>
+    <string name="sortingDisplay">%s: %s</string>
     <string-array name="sorting_options">
         <item name="sort_option_average_none">None</item>
         <item name="sort_option_average_product_price">Average product price</item>
